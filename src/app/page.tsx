@@ -1,103 +1,64 @@
-import Image from "next/image";
+import Image from 'next/image';
+import Link from 'next/link';
+import { HomeBg } from '../assets/images';
+import MovieSlider from '@/components/Carousels/MovieSlider';
+import { fetchList } from '@/api/helpers';
+import { Movie } from '@/types';
 
-export default function Home() {
+const Home = async () => {
+  const movies = await fetchList<Movie[]>('/Movies?rating=gte.4&limit=10', 100);
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <main className="bg-main">
+      <section>
+        <div className="relative md:h-[600px] h-[400px] border">
+          <Image
+            fill
+            src={HomeBg}
+            className="size-full object-cover"
+            alt="movies"
+          />
+          <div className="absolute top-0 left-0 size-full bg-[linear-gradient(0deg,_rgba(7,14,23,1)_8%,_rgba(255,255,255,0)_100%)]">
+            <div className="container m-auto flex size-full flex-col items-center justify-center gap-10 px-2 text-gray-200 lg:px-5">
+              <h3 className="w-11/12 text-center text-2xl font-bold sm:text-4xl md:w-4/5 md:text-6xl lg:w-3/5 2xl:text-8xl">
+                Your streaming guide for movies
+              </h3>
+              <p className="w-4/5 text-center text-xl text-gray-400">
+                Find where to stream new, popular & upcoming entertainment with
+                JustWatch.
+              </p>
+              <Link
+                href="/movies"
+                className="rounded-md border border-yellow-400 bg-yellow-400 hover:bg-transparent py-2 px-5 text-center text-sm font-semibold text-black hover:text-yellow-400 transition-all duration-500 md:w-96 md:px-0 md:text-lg"
+              >
+                Discover Movies
+              </Link>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </section>
+      <section>
+        <div className="container m-auto px-2 lg:px-5">
+          <h3 className="lg:w-3/5 w-11/12 py-20 lg:text-5xl md:text-4xl text-3xl md:text-start text-center font-bold text-gray-300">
+            Browse new, popular and upcoming movies
+          </h3>
+          <div className="flex lg:flex-row flex-col">
+            <div className="lg:w-1/5 w-full pr-10 text-white">
+              <h4 className="mb-4 text-2xl font-bold">
+                Top 5 movies this week
+              </h4>
+              <p className="text-gray-400">
+                Check out this week’s most popular movies
+              </p>
+            </div>
+            <div className="lg:w-4/5 w-full">
+              <MovieSlider movies={movies} atHome={true} />
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
   );
-}
+};
+
+export default Home;
