@@ -1,7 +1,13 @@
 import { fetchList } from '@/api/helpers';
 import SingleMovie from '@/components/Common/SingleMovie/SingleMovie';
 import { Movie } from '@/types';
+import { Metadata } from 'next';
 import React from 'react';
+
+export const metadata: Metadata = {
+  title: 'Justwatch | Movies',
+  description: 'Discover the best movies and TV shows to stream.',
+};
 
 const page = async () => {
   const movies = await fetchList<Movie[]>('Movies?select=*', 100);

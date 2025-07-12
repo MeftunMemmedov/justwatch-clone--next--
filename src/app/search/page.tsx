@@ -1,15 +1,14 @@
 import { fetchList } from '@/api/helpers';
 import { Movie } from '@/types';
+import Image from 'next/image';
 import Link from 'next/link';
 import { LiaImdb } from 'react-icons/lia';
 
-interface Props {
-  searchParams: {
-    q?: string;
-  };
-}
-
-const page = async ({ searchParams }: Props) => {
+const page = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | undefined }>;
+}) => {
   const query = await searchParams;
   const movies = await fetchList<Movie[]>(`Movies?select=*`, false);
   const searchQuery = query?.q?.toLowerCase().trim() || '';
@@ -29,7 +28,7 @@ const page = async ({ searchParams }: Props) => {
     <main className="bg-main min-h-screen">
       <section>
         {results.length > 0 ? (
-          <div className="flex flex-col gap-5 container m-auto">
+          <div className="flex flex-col gap-5 container m-auto pb-10">
             <div className="text-2xl text-slate-200 mt-4">
               Results for: {query.q}
             </div>
@@ -40,7 +39,7 @@ const page = async ({ searchParams }: Props) => {
                 className="flex gap-5 text-slate-200"
               >
                 <div className="h-fit w-1/5 overflow-hidden rounded-lg md:h-auto">
-                  <img
+                  <Image
                     src={movie?.poster}
                     className="aspect-[2/3] w-full object-cover"
                     alt={movie?.title}

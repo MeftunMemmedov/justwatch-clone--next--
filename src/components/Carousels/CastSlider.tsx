@@ -10,6 +10,7 @@ import { FreeMode, Pagination } from 'swiper/modules';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import Link from 'next/link';
 import { Actor } from '@/types';
+import Image from 'next/image';
 
 interface Props {
   cast: Actor[];
@@ -90,10 +91,12 @@ const CastSlider = ({ cast }: Props) => {
         {cast?.map((actor, index) => (
           <SwiperSlide key={index}>
             <div className="flex flex-col items-center gap-2 rounded-lg bg-[#101720] py-5">
-              <div className="size-[90px] overflow-hidden rounded-full">
-                <img
+              <div className="size-[90px] overflow-hidden rounded-full relative">
+                <Image
+                  fill
                   src="https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png"
-                  alt=""
+                  alt={actor.actor.fullName}
+                  className="object-cover"
                 />
               </div>
               <Link

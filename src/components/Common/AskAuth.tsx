@@ -29,7 +29,7 @@ const Transition = forwardRef(function Transition(
 });
 
 interface Props {
-  movie: Movie;
+  movie?: Movie;
   type: string;
 }
 

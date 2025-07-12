@@ -7,7 +7,7 @@ import { createContext, useState, ReactNode, useEffect } from 'react';
 interface GlobalContextType {
   userDialogOpen: boolean;
   setUserDialogOpen: (open: boolean) => void;
-  user: User;
+  user: User | null;
   setUser: (user: User) => void;
 }
 

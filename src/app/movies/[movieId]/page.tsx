@@ -5,18 +5,36 @@ import TrailerSlider from '@/components/Carousels/TrailerSlider';
 import MovieButtons from '@/components/MovieButtons/MovieButtons';
 import TrailerPlayer from '@/components/Trailer/TrailerPlayer/TrailerPlayer';
 import { Movie } from '@/types';
+import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import { BsPlayFill } from 'react-icons/bs';
 import { LiaImdb } from 'react-icons/lia';
 
-interface Props {
-  params: { movieId: string };
-  user?: boolean;
-}
+export const generateStaticParams = async () => {
+  const movies = await fetchList<Movie[]>('/Movies?select=*', false);
 
-const page = async ({ params }: Props) => {
+  return movies.map((mov) => ({
+    movieId: mov.id,
+  }));
+};
+
+export const generateMetadata = async ({
+  params,
+}: {
+  params: Promise<{ movieId: string }>;
+}): Promise<Metadata> => {
+  const { movieId } = await params;
+  const movie = await fetchDetails<Movie>(`/Movies?id=eq.${movieId}`);
+  const movieTitle = movie.title;
+  return {
+    title: `Justwatch | ${movieTitle}`,
+    description: movie?.description,
+  };
+};
+
+const page = async ({ params }: { params: Promise<{ movieId: string }> }) => {
   const { movieId } = await params;
   const movies = await fetchList<Movie[]>('Movies?select=*', false);
 
@@ -198,7 +216,9 @@ const page = async ({ params }: Props) => {
                     </div>
                   </div>
                   <div className="flex w-1/2 justify-end lg:w-2/5">
-                    <img
+                    <Image
+                      width={150}
+                      height={220}
                       src={movie?.poster}
                       className="aspect-[2/3] h-[220px] w-[150px] rounded-lg object-cover"
                       alt={movie?.title}

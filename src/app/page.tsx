@@ -4,6 +4,13 @@ import { HomeBg } from '../assets/images';
 import MovieSlider from '@/components/Carousels/MovieSlider';
 import { fetchList } from '@/api/helpers';
 import { Movie } from '@/types';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Justwatch | Home',
+  description:
+    'Find where to stream new, popular & upcoming entertainment with JustWatch.',
+};
 
 const Home = async () => {
   const movies = await fetchList<Movie[]>('/Movies?rating=gte.4&limit=10', 100);

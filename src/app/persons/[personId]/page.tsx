@@ -3,10 +3,7 @@ import SingleMovie from '@/components/Common/SingleMovie/SingleMovie';
 import { Movie, Person } from '@/types';
 import Image from 'next/image';
 
-interface Props {
-  params: { personId: string };
-}
-const page = async ({ params }: Props) => {
+const page = async ({ params }: { params: Promise<{ personId: string }> }) => {
   const { personId } = await params;
   const person = await fetchDetails<Person>(`Movies-Artists?id=eq.${personId}`);
   const movies = await fetchList<Movie[]>(`Movies?select=*`, false);
