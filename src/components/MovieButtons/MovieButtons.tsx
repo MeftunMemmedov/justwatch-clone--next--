@@ -68,54 +68,88 @@ const MovieButtons = ({ movie }: Props) => {
   }, [user, movie]);
 
   const handleLike = async () => {
-    setLoading((prevLoading) => ({ ...prevLoading, like: true }));
+    if (loading.like || loading.dislike) return;
+
+    setLoading((prev) => ({ ...prev, like: true }));
+
+    const prevLikes = likes;
+    const prevDislikes = dislikes;
+
+    const newLikes = prevLikes.includes(user.id)
+      ? prevLikes.filter((id) => id !== user.id)
+      : [...prevLikes, user.id];
+
+    const newDislikes = prevDislikes.includes(user.id)
+      ? prevDislikes.filter((id) => id !== user.id)
+      : prevDislikes;
+
+    setLikes(newLikes);
+    setDislikes(newDislikes);
+
     try {
       await likeMovie(movie, user.id);
-      if (likes.includes(user.id)) {
-        setLikes(likes.filter((id) => id !== user.id));
-      } else {
-        setLikes([...likes, user.id]);
-        if (dislikes.includes(user.id)) {
-          setDislikes(dislikes.filter((id) => id !== user.id));
-        }
-      }
     } catch (error) {
       console.error('Error liking movie:', error);
-      getLikeDislikes();
+      setLikes(prevLikes);
+      setDislikes(prevDislikes);
     } finally {
-      setLoading((prevLoading) => ({ ...prevLoading, like: false }));
+      setLoading((prev) => ({ ...prev, like: false }));
     }
   };
 
   const handleDislike = async () => {
-    setLoading((prevLoading) => ({ ...prevLoading, dislike: true }));
+    if (loading.dislike || loading.like) return;
+
+    setLoading((prev) => ({ ...prev, dislike: true }));
+
+    const prevLikes = likes;
+    const prevDislikes = dislikes;
+
+    const newDislikes = prevDislikes.includes(user.id)
+      ? prevDislikes.filter((id) => id !== user.id)
+      : [...prevDislikes, user.id];
+
+    const newLikes = prevLikes.includes(user.id)
+      ? prevLikes.filter((id) => id !== user.id)
+      : prevLikes;
+
+    setDislikes(newDislikes);
+    setLikes(newLikes);
+
     try {
       await dislikeMovie(movie, user.id);
-      if (dislikes.includes(user.id)) {
-        setDislikes(dislikes.filter((id) => id !== user.id));
-      } else {
-        setDislikes([...dislikes, user.id]);
-        if (likes.includes(user.id)) {
-          setLikes(likes.filter((id) => id !== user.id));
-        }
-      }
     } catch (error) {
       console.error('Error disliking movie:', error);
-      getLikeDislikes();
+      setDislikes(prevDislikes);
+      setLikes(prevLikes);
     } finally {
-      setLoading((prevLoading) => ({ ...prevLoading, dislike: false }));
+      setLoading((prev) => ({ ...prev, dislike: false }));
     }
   };
 
   const handleWatchlistToggle = async () => {
     setLoading((prevLoading) => ({ ...prevLoading, watchlist: true }));
-    if (inWatchlist) {
-      await removeFromWatchList(user.id, movie.id);
-    } else {
-      await sendToWatchList(user.id, movie.id);
+
+    try {
+      if (inWatchlist) {
+        await removeFromWatchList(user.id, movie.id);
+      } else {
+        await sendToWatchList(user.id, movie.id);
+      }
+
+      setWatchlist((prev) =>
+        inWatchlist
+          ? prev.filter(
+              (item) => !(item.userId === user.id && item.movieId === movie.id)
+            )
+          : [...prev, { userId: user.id, movieId: movie.id }]
+      );
+    } catch (error) {
+      console.error('Error updating watchlist:', error);
+      await getWatchList();
+    } finally {
+      setLoading((prevLoading) => ({ ...prevLoading, watchlist: false }));
     }
-    await getWatchList();
-    setLoading((prevLoading) => ({ ...prevLoading, watchlist: false }));
   };
 
   return (

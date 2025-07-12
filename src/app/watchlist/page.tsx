@@ -6,6 +6,7 @@ import { GlobalContext } from '@/context/GlobalContext';
 import { Movie } from '@/types';
 import { use, useEffect, useState } from 'react';
 import Loading from '@/components/Common/Loading';
+
 const Page = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { user } = use(GlobalContext) as any;
@@ -38,9 +39,14 @@ const Page = () => {
     if (user !== null) {
       getData();
     }
-  }, [user, getData]);
+  }, [user]);
+
+  if (typeof window !== 'undefined') {
+    document.title = 'Justwatch | Watchlist';
+  }
 
   if (isLoading) return <Loading />;
+
   return (
     <main className="bg-main">
       <section>

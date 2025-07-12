@@ -38,14 +38,17 @@ const page = async ({
                 href={`/movies/${movie.id}`}
                 className="flex gap-5 text-slate-200"
               >
-                <div className="h-fit w-1/5 overflow-hidden rounded-lg md:h-auto">
+                <div className="h-fit md:w-1/5 w-2/5 overflow-hidden rounded-lg md:h-auto">
                   <Image
+                    width={1920}
+                    height={1080}
                     src={movie?.poster}
-                    className="aspect-[2/3] w-full object-cover"
+                    loading="lazy"
+                    className="aspect-[2/3] object-cover"
                     alt={movie?.title}
                   />
                 </div>
-                <div className="flex w-4/5 flex-col gap-5 py-3">
+                <div className="flex md:w-4/5 w-3/5 flex-col gap-5 py-3">
                   <div className="flex items-center gap-1">
                     <h3 className="md:text-3xl text-lg font-bold">
                       {movie?.title}
